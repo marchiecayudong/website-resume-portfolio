@@ -1,2 +1,32 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+import os
+import zipfile
+
+# Create project folder structure
+base = "resume-website"
+os.makedirs(os.path.join(base, "images"), exist_ok=True)
+
+# File contents
+files = {
+    "index.html": "YOUR INDEX.HTML CONTENT HERE",
+    "archie.html": "YOUR ARCHIE.HTML CONTENT HERE",
+    "editha.html": "YOUR EDITHA.HTML CONTENT HERE",
+    "jefferson.html": "YOUR JEFFERSON.HTML CONTENT HERE"
+}
+
+# Write HTML files
+for name, content in files.items():
+    with open(os.path.join(base, name), "w", encoding="utf-8") as f:
+        f.write(content)
+
+# Create empty placeholder images
+for img in ["archie.jpg", "editha.jpg", "jefferson.jpg"]:
+    open(os.path.join(base, "images", img), "wb").close()
+
+# Create ZIP file
+with zipfile.ZipFile("resume_website_project.zip", "w") as zipf:
+    for foldername, _, filenames in os.walk(base):
+        for filename in filenames:
+            path = os.path.join(foldername, filename)
+            zipf.write(path, arcname=os.path.relpath(path, base))
+
+print("✅ Project zipped successfully!")
